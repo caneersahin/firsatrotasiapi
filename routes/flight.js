@@ -89,6 +89,9 @@ router.post('/register', async (req, res) => {
         } else {
             message += "Herhangi bir uçuş bulunamadı.";
         }
+
+
+        message="Kaydınız başarıyla tamamlandı. En ucuz bilet fiyatı için bizden mesaj bekleyin! :)"
         console.log("message-->", message)
 
         // SMS gönder
