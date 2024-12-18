@@ -74,8 +74,13 @@ router.post('/register', async (req, res) => {
             lastCheckedPrice: 0, // Varsayılan değer
         });
         await trip.save(); // Seyahati kaydet
+        console.log("test--->", name, surname, phoneNumber, notificationType, budgetLimit, departureCity, destinationCity)
 
+        message="Kaydınız başarıyla tamamlandı. En ucuz bilet fiyatı için bizden mesaj bekleyin! :)"
+        console.log("message-->", message)
 
+        // SMS gönder
+        sendSms.sendSms(message, [phoneNumber]); // Telefon numarasını bir dizi içinde gönder
         // Uçuş listesini almak için API'ye istek at
         const flightListResponse = await axios.get(`https://api.biryere.com/api/v4/deals?limit=50&page=1&origin1CountryCodes=TR&origin1CityNames=${departureCity}&destinationCountryCodes=&destinationCityNames=${destinationCity}&type=3&season=&month=&holiday=&weekend=&duration=&source=&priceMax=&sortBy=s&fromTs=true&lat=0&long=0&oneResult=true`);
         // API'den dönen uçuş verisini işle
@@ -83,12 +88,11 @@ router.post('/register', async (req, res) => {
         let message = "Yeni Uçuşlar:\n";
         // Uçuşları mesaj olarak ekle
         if (flightList && flightList.length > 0) {
-
-
             message += `Kalkış: ${flightList[0].origin1CityName} - Varış: ${flightList[0].origin2CityName} - En uygun fiyat: ${flightList[0].minPrice}\n`; // flight.someProperty uygun şekilde değiştir
         } else {
             message += "Herhangi bir uçuş bulunamadı.";
         }
+        sendSms.sendSms(message, [phoneNumber]); // Telefon numarasını bir dizi içinde gönder
 
 
         message="Kaydınız başarıyla tamamlandı. En ucuz bilet fiyatı için bizden mesaj bekleyin! :)"
